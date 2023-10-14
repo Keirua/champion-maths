@@ -7,9 +7,9 @@
     <div id="app">
       <div id="difficulty-screen">
         <h1>Choose Difficulty</h1>
-        <button onclick="startGame('easy')">Easy</button>
-        <button onclick="startGame('medium')">Medium</button>
-        <button onclick="startGame('difficult')">Difficult</button>
+        <button onclick="startGame('easy')">Easy. 1..5 + 1..5</button>
+        <button onclick="startGame('medium')">Medium. 1..5 + 6..10</button>
+        <button onclick="startGame('difficult')">Difficult. 6..10 + 6..10</button>
       </div>
       <div id="game-screen" style="display: none;">
         <h1>Math Game</h1>
@@ -28,12 +28,6 @@
       </div>
     </div>
     <script>
-      const difficulties = {
-        easy: 5,
-        medium: 10,
-        difficult: 15,
-      };
-
       let currentDifficulty;
       let pairs = [];
       let currentPairIndex = 0;
@@ -42,19 +36,24 @@
 
       function startGame(difficulty) {
         currentDifficulty = difficulty;
-        pairs = generatePairs(difficulties[difficulty]);
+        pairs = generatePairs(difficulty);
         showGameScreen();
         displayNextPair();
       }
 
-      function generatePairs(pairCount) {
+      function generatePairs(difficulty) {
         const pairs = [];
-        for (let i = 1; i <= 5; i++) {
-          for (let j = 1; j <= 5; j++) {
+        let mini = 1, maxi = 2;
+        let minj = 1, maxj = 2;
+        for (let i = mini; i <= maxi; i++) {
+          for (let j = minj; j <= maxj; j++) {
             pairs.push({ i, j });
           }
         }
-        return pairs.slice(0, pairCount);
+
+        console.log(pairs);
+        return pairs;
+        // return pairs.slice(0, pairCount);
       }
 
       function showGameScreen() {
