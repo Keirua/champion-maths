@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Math Game</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="difficulty-screen">
+        <h1>Choose Difficulty</h1>
+        <button onclick="startGame('easy')">Easy</button>
+        <button onclick="startGame('medium')">Medium</button>
+        <button onclick="startGame('difficult')">Difficult</button>
+      </div>
+      <div id="game-screen" style="display: none;">
+        <h1>Math Game</h1>
+        <div id="problem">
+          <!-- Problem will be displayed here -->
+        </div>
+        <input id="answer" type="text" placeholder="Enter your answer" />
+        <button onclick="checkAnswer()">Check Answer</button>
+        <button onclick="showResult('success')">Success</button>
+        <button onclick="showResult('failure')">Failure</button>
+      </div>
+      <div id="result-screen" style="display: none;">
+        <h1>Game Over</h1>
+        <p>Successes: <span id="success-count">0</span></p>
+        <p>Failures: <span id="failure-count">0</span></p>
+      </div>
+    </div>
+    <script>
+      const difficulties = {
+        easy: 5,
+        medium: 10,
+        difficult: 15,
+      };
+
+      let currentDifficulty;
+      let pairs = [];
+      let currentPairIndex = 0;
+      let successes = 0;
+      let failures = 0;
+
+      function startGame(difficulty) {
+        currentDifficulty = difficulty;
+        pairs = generatePairs(difficulties[difficulty]);
+        showGameScreen();
+        displayNextPair();
+      }
+
+      function generatePairs(pairCount) {
+        const pairs = [];
+        for (let i = 1; i <= 5; i++) {
+          for (let j = 1; j <= 5; j++) {
+            pairs.push({ i, j });
+          }
+        }
+        return pairs.slice(0, pairCount);
+      }
+
+      function showGameScreen() {
+        document.getElementById("difficulty-screen").style.display = "none";
+        document.getElementById("game-screen").style.display = "block";
+      }
+
+      function displayNextPair() {
+        if (currentPairIndex < pairs.length) {
+          const pair = pairs[currentPairIndex];
+          document.getElementById("problem").innerText = `${pair.i} * ${pair.j} = ?`;
+          document.getElementById("answer").value = "";
+        } else {
+          showResultScreen();
+        }
+      }
+
+      function checkAnswer() {
+        const pair = pairs[currentPairIndex];
+        const answer = parseInt(document.getElementById("answer").value, 10);
+
+        if (answer === pair.i * pair.j) {
+          showResult("success");
+        } else {
+          showResult("failure");
+        }
+      }
+
+      function showResult(result) {
+        if (result === "success") {
+          successes++;
+        } else if (result === "failure") {
+          failures++;
+        }
+
+        currentPairIndex++;
+        displayNextPair();
+      }
+
+      function showResultScreen() {
+        document.getElementById("game-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("success-count").innerText = successes;
+        document.getElementById("failure-count").innerText = failures;
+      }
+    </script>
+  </body>
+</html>
