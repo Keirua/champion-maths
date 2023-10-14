@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Math Game</title>
+    <title>Champion de calcul mental</title>
   </head>
   <body>
     <div id="app">
       <div id="difficulty-screen">
-        <h1>Choose Difficulty</h1>
-        <button onclick="startGame('easy')">Easy. 1..5 + 1..5</button>
-        <button onclick="startGame('medium')">Medium. 1..5 + 6..10</button>
-        <button onclick="startGame('difficult')">Difficult. 6..10 + 6..10</button>
+        <h1>Difficulté</h1>
+        <button onclick="startGame('easy')">1..5 + 1..5</button>
+        <button onclick="startGame('medium')">1..5 + 6..10</button>
+        <button onclick="startGame('difficult')">6..10 + 6..10</button>
       </div>
       <div id="game-screen" style="display: none;">
-        <h1>Math Game</h1>
+        <h1>Champion de calcul mental</h1>
+
         <div id="problem">
           <!-- Problem will be displayed here -->
         </div>
-        <input id="answer" type="text" placeholder="Enter your answer" />
-        <button onclick="checkAnswer()">Check Answer</button>
-        <button onclick="showResult('success')">Success</button>
-        <button onclick="showResult('failure')">Failure</button>
+        <button id="check-btn" onclick="checkAnswer()">Check Answer</button>
+
+        <button id="success-btn" onclick="showResult('success')">Success</button>
+        <button id="failure-btn" onclick="showResult('failure')">Failure</button>
+      </div>
+      <div id="score-table">
       </div>
       <div id="result-screen" style="display: none;">
         <h1>Game Over</h1>
@@ -33,12 +36,16 @@
       let currentPairIndex = 0;
       let successes = 0;
       let failures = 0;
+      let displayAnswer = false;
 
       function startGame(difficulty) {
         currentDifficulty = difficulty;
+        displayAnswer = false;
         pairs = generatePairs(difficulty);
         showGameScreen();
+        update_display_result();
         displayNextPair();
+        createResultTable(5, 5);
       }
 
       function generatePairs(difficulty) {
@@ -51,9 +58,7 @@
           }
         }
 
-        console.log(pairs);
         return pairs;
-        // return pairs.slice(0, pairCount);
       }
 
       function showGameScreen() {
@@ -64,22 +69,16 @@
       function displayNextPair() {
         if (currentPairIndex < pairs.length) {
           const pair = pairs[currentPairIndex];
-          document.getElementById("problem").innerText = `${pair.i} * ${pair.j} = ?`;
-          document.getElementById("answer").value = "";
+          document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
+          // document.getElementById("answer").value = "";
         } else {
           showResultScreen();
         }
       }
 
       function checkAnswer() {
-        const pair = pairs[currentPairIndex];
-        const answer = parseInt(document.getElementById("answer").value, 10);
-
-        if (answer === pair.i * pair.j) {
-          showResult("success");
-        } else {
-          showResult("failure");
-        }
+        displayAnswer = true;
+        update_display_result();
       }
 
       function showResult(result) {
@@ -90,15 +89,50 @@
         }
 
         currentPairIndex++;
+        displayAnswer = false;
+        update_display_result();
         displayNextPair();
+      }
+
+      function update_display_result(){
+        const pair = pairs[currentPairIndex];
+        if(displayAnswer){
+          document.getElementById("check-btn").style.display = "none";
+          document.getElementById("success-btn").style.display = "inline";
+          document.getElementById("failure-btn").style.display = "inline";
+          document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
+          let result = pair.i + pair.j;
+          document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ${result}`;
+        } else {
+          document.getElementById("check-btn").style.display = "inline";
+          document.getElementById("success-btn").style.display = "none";
+          document.getElementById("failure-btn").style.display = "none";
+          document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
+        }
       }
 
       function showResultScreen() {
         document.getElementById("game-screen").style.display = "none";
-        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("result-screen").style.display = "inline";
         document.getElementById("success-count").innerText = successes;
         document.getElementById("failure-count").innerText = failures;
       }
+
+      function createResultTable(rows, columns) {
+            const table = document.getElementById("score-table");
+            let tableHTML = "<table>";
+
+            for (let i = 1; i <= rows; i++) {
+                tableHTML += "<tr>";
+                for (let j = 1; j <= columns; j++) {
+                    tableHTML += "<td>" + i + "+" + j + "</td>";
+                }
+                tableHTML += "</tr>";
+            }
+
+            tableHTML += "</table>";
+            table.innerHTML = tableHTML;
+        }
     </script>
   </body>
 </html>
