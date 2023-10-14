@@ -2,6 +2,15 @@
 <html>
   <head>
     <title>Champion de calcul mental</title>
+    <style type="text/css">
+      .success {
+        background: green;
+      }
+      .failure {
+        background: orange;
+      }
+
+    </style>
   </head>
   <body>
     <div id="app">
@@ -22,17 +31,19 @@
         <button id="success-btn" onclick="showResult('success')">Success</button>
         <button id="failure-btn" onclick="showResult('failure')">Failure</button>
       </div>
-      <div id="score-table">
-      </div>
       <div id="result-screen" style="display: none;">
         <h1>Game Over</h1>
         <p>Successes: <span id="success-count">0</span></p>
         <p>Failures: <span id="failure-count">0</span></p>
       </div>
+      <div id="score-table">
+      </div>
     </div>
     <script>
       let currentDifficulty;
       let pairs = [];
+      let success_pairs = [];
+      let failure_pairs = [];
       let currentPairIndex = 0;
       let successes = 0;
       let failures = 0;
@@ -47,11 +58,21 @@
         showGameScreen();
         update_display_result();
         displayNextPair();
-        createResultTable(5, 5);
+        createResultTable();
       }
 
       function generatePairs(difficulty) {
         const pairs = [];
+        if(difficulty == 'medium') {
+          minj = 6;
+          maxj = 10;
+        }
+        if(difficulty == 'difficult') {
+          mini = 6;
+          maxi = 10;
+          minj = 6;
+          maxj = 10;
+        }
         
         for (let i = mini; i <= maxi; i++) {
           for (let j = minj; j <= maxj; j++) {
@@ -68,10 +89,10 @@
       }
 
       function displayNextPair() {
+        createResultTable();
         if (currentPairIndex < pairs.length) {
           const pair = pairs[currentPairIndex];
           document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
-          // document.getElementById("answer").value = "";
         } else {
           showResultScreen();
         }
@@ -83,16 +104,19 @@
       }
 
       function showResult(result) {
+        const pair = pairs[currentPairIndex];
+
         if (result === "success") {
           successes++;
+          success_pairs.push([pair.i, pair.j])
         } else if (result === "failure") {
           failures++;
+          failure_pairs.push([pair.i, pair.j])
         }
-
         currentPairIndex++;
         displayAnswer = false;
-        update_display_result();
         displayNextPair();
+        update_display_result();
       }
 
       function update_display_result(){
@@ -101,7 +125,6 @@
           document.getElementById("check-btn").style.display = "none";
           document.getElementById("success-btn").style.display = "inline";
           document.getElementById("failure-btn").style.display = "inline";
-          document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
           let result = pair.i + pair.j;
           document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ${result}`;
         } else {
@@ -110,6 +133,7 @@
           document.getElementById("failure-btn").style.display = "none";
           document.getElementById("problem").innerText = `${pair.i} + ${pair.j} = ?`;
         }
+        createResultTable();
       }
 
       function showResultScreen() {
@@ -119,20 +143,35 @@
         document.getElementById("failure-count").innerText = failures;
       }
 
-      function createResultTable(rows, columns) {
+      function createResultTable() {
             const table = document.getElementById("score-table");
             let tableHTML = "<table>";
 
             for (let i = mini; i <= maxi; i++) {
                 tableHTML += "<tr>";
                 for (let j = minj; j <= maxj; j++) {
-                    tableHTML += "<td>" + i + "+" + j + "</td>";
+                    if(isPairInArray(success_pairs, [i, j])){
+                      tableHTML += "<td class='success'>" + i + "+" + j + "</td>";
+                    } else if(isPairInArray(failure_pairs, [i, j])){
+                      tableHTML += "<td class='failure'>" + i + "+" + j + "</td>";
+                    } else {
+                      tableHTML += "<td>" + i + "+" + j + "</td>";
+                    }
                 }
                 tableHTML += "</tr>";
             }
 
             tableHTML += "</table>";
             table.innerHTML = tableHTML;
+        }
+
+        function isPairInArray(pairsArray, pairToCheck) {
+            for (const pair of pairsArray) {
+                if (pair[0] === pairToCheck[0] && pair[1] === pairToCheck[1]) {
+                    return true;
+                }
+            }
+            return false;
         }
     </script>
   </body>
