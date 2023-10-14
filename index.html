@@ -37,6 +37,8 @@
       let successes = 0;
       let failures = 0;
       let displayAnswer = false;
+      let mini = 1, maxi = 2;
+      let minj = 1, maxj = 2;
 
       function startGame(difficulty) {
         currentDifficulty = difficulty;
@@ -50,8 +52,7 @@
 
       function generatePairs(difficulty) {
         const pairs = [];
-        let mini = 1, maxi = 2;
-        let minj = 1, maxj = 2;
+        
         for (let i = mini; i <= maxi; i++) {
           for (let j = minj; j <= maxj; j++) {
             pairs.push({ i, j });
@@ -122,9 +123,9 @@
             const table = document.getElementById("score-table");
             let tableHTML = "<table>";
 
-            for (let i = 1; i <= rows; i++) {
+            for (let i = mini; i <= maxi; i++) {
                 tableHTML += "<tr>";
-                for (let j = 1; j <= columns; j++) {
+                for (let j = minj; j <= maxj; j++) {
                     tableHTML += "<td>" + i + "+" + j + "</td>";
                 }
                 tableHTML += "</tr>";
