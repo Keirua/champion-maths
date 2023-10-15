@@ -27,12 +27,16 @@
       }
 
       body {
+          font-size: 3vw;
           display: table-cell;
           /*vertical-align: top;*/
           text-align: center;
       }
-      #problem, #check-btn, #success-btn, #failure-btn {
+      #problem, #check-btn, #success-btn, #failure-btn{
         font-size:  2em;
+      }
+      #difficulty-screen button {
+        font-size:  1em;
       }
       #check-btn { background: lightblue; }
       #success-btn { background: green; }
@@ -48,9 +52,9 @@
     <div id="app">
       <div id="difficulty-screen">
         <h1>Difficulté</h1>
-        <button onclick="startGame('easy')">1..5 + 1..5</button>
-        <button onclick="startGame('medium')">1..5 + 6..10</button>
-        <button onclick="startGame('difficult')">6..10 + 6..10</button>
+        <button onclick="startGame('easy')">⭐<br/>1..5 + 1..5</button>
+        <button onclick="startGame('medium')">⭐⭐<br/>1..5 + 6..10</button>
+        <button onclick="startGame('difficult')">⭐⭐⭐<br/>6..10 + 6..10</button>
       </div>
       <div id="game-screen" style="display: none;">
         <div id="problem">
