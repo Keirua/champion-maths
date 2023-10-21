@@ -1,4 +1,4 @@
-User
+
 create a javascript app that has 3 screens:
  - difficulty screen: you can select between 3 difficulties: "easy", "medium" and "difficult".
  - game screen:
